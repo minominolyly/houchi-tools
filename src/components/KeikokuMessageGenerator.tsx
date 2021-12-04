@@ -20,18 +20,20 @@ import Turn from "../models/Turn";
 import { faFortAwesome } from "@fortawesome/free-brands-svg-icons";
 
 const initialState: KeikokuMessageGeneratorState = {
-  asciiArt: "",
+  note: "",
   houchiMap: HOUCHI_MAPS[0],
   houchiCastles: [],
   houchiOperations: [],
 };
 
-export default function KeikokuMessageGenerator(props: KeikokuMessageGeneratorProps) {
-  const [state, setState] = useState<KeikokuMessageGeneratorState>(initialState);
+export default function KeikokuMessageGenerator(
+  props: KeikokuMessageGeneratorProps
+) {
+  const [state, setState] =
+    useState<KeikokuMessageGeneratorState>(initialState);
 
   const houchiCastleElements: JSX.Element[] = [];
   const commands: string[] = [];
-  commands.push("【お知らせ】");
 
   state.houchiCastles.forEach((houchiCastle: HouchiCastle) => {
     const houchiOperation = state.houchiOperations.find(
@@ -151,6 +153,9 @@ export default function KeikokuMessageGenerator(props: KeikokuMessageGeneratorPr
         : `${houchiCastle.name}→${houchiOperation.turn.name}。`
     );
   });
+
+  const command = `【お知らせ】${commands.join("")}${state.note}`;
+
   return (
     <section>
       <div>
@@ -173,7 +178,30 @@ export default function KeikokuMessageGenerator(props: KeikokuMessageGeneratorPr
           <Multiselect
             value={state.houchiCastles}
             data={state.houchiMap.houchiCastles}
-            textField="name"
+            textField={(houchiCastle: any) => {
+              switch (houchiCastle.level) {
+                case 3:
+                  return `🟨${houchiCastle.name}`;
+                case 2:
+                  return `🟦${houchiCastle.name}`;
+                case 1:
+                  return `🟥${houchiCastle.name}`;
+                default:
+                  return `${houchiCastle.name}`;
+              }
+            }}
+            groupBy={(houchiCastle) => {
+              switch (houchiCastle.level) {
+                case 3:
+                  return "金城";
+                case 2:
+                  return "青城";
+                case 1:
+                  return "赤城";
+                default:
+                  return "";
+              }
+            }}
             onChange={(houchiCastles: HouchiCastle[]) => {
               const houchiOperations: HouchiOperation[] = [];
               for (let i = 0; i < houchiCastles.length; i++) {
@@ -215,15 +243,24 @@ export default function KeikokuMessageGenerator(props: KeikokuMessageGeneratorPr
         </FormGroup>
         {houchiCastleElements}
       </div>
+      <FormGroup>
+        <FormLabel className="text-bold">{"補足事項"}</FormLabel>
+        <Textarea
+          value={state.note}
+          rows={2}
+          onChange={(event) => {
+            setState({ ...state, note: event.currentTarget.value });
+          }}
+          maxLength={100}
+        />
+      </FormGroup>
       <div className="divider"></div>
       <FormGroup>
         <FormLabel className="text-bold">{"結果"}</FormLabel>
         <div className="input-group">
-          <Textarea value={commands.join("")} rows={7} readOnly={true} />
-          <CopyToClipboard text={commands.join("")}>
-            <button className="btn btn-primary input-group-btn">
-              Copy!
-            </button>
+          <Textarea value={command} rows={7} readOnly={true} />
+          <CopyToClipboard text={command}>
+            <button className="btn btn-primary input-group-btn">Copy!</button>
           </CopyToClipboard>
         </div>
       </FormGroup>
@@ -232,12 +269,10 @@ export default function KeikokuMessageGenerator(props: KeikokuMessageGeneratorPr
 }
 
 interface KeikokuMessageGeneratorState {
-  asciiArt: string;
+  note: string;
   houchiMap: HouchiMap;
   houchiCastles: HouchiCastle[];
   houchiOperations: HouchiOperation[];
 }
 
-interface KeikokuMessageGeneratorProps {
-
-}
+interface KeikokuMessageGeneratorProps {}

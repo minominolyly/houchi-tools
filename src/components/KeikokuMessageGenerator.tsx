@@ -52,25 +52,49 @@ export default function KeikokuMessageGenerator(
         break;
     }
 
-    const subElement =
-      houchiOperation.turn.code === "offence" ||
-      houchiOperation.turn.code === "deffence" ? (
-        <div className="">
-          <div className="input-group width-10rem">
-            <span className="input-group-addon">{"残り"}</span>
-            <InputText
-              type={"number"}
-              className="width-4rem"
-              min={0}
-              max={45}
-              value={houchiOperation.minutes}
-              onChange={(event) => {
+    let subElement: JSX.Element = <React.Fragment />;
+    switch (houchiOperation.turn.code) {
+      case "offence":
+      case "deffence":
+      case "counterattack":
+        subElement = (
+          <div className="">
+            <div className="input-group width-10rem">
+              <span className="input-group-addon">{"残り"}</span>
+              <InputText
+                type={"number"}
+                className="width-4rem"
+                min={0}
+                max={45}
+                value={houchiOperation.minutes}
+                onChange={(event) => {
+                  const ho = houchiOperation;
+                  if (event.currentTarget.value !== "") {
+                    ho.minutes = Number(event.currentTarget.value);
+                  } else {
+                    ho.minutes = "";
+                  }
+
+                  const newHoList = state.houchiOperations.filter(
+                    (ho) => ho.houchiCastleCode !== houchiCastle.code
+                  );
+                  newHoList.push(ho);
+
+                  setState({
+                    ...state,
+                    houchiOperations: newHoList,
+                  });
+                }}
+              />
+              <span className="input-group-addon">{"分から"}</span>
+            </div>
+            <DropdownList
+              value={houchiOperation.operationOption}
+              data={OPERATION_OPTION_LIST}
+              textField="text"
+              onChange={(operationOption: OperationOption) => {
                 const ho = houchiOperation;
-                if (event.currentTarget.value !== "") {
-                  ho.minutes = Number(event.currentTarget.value);
-                } else {
-                  ho.minutes = "";
-                }
+                ho.operationOption = operationOption;
 
                 const newHoList = state.houchiOperations.filter(
                   (ho) => ho.houchiCastleCode !== houchiCastle.code
@@ -83,31 +107,41 @@ export default function KeikokuMessageGenerator(
                 });
               }}
             />
-            <span className="input-group-addon">{"分から"}</span>
           </div>
-          <DropdownList
-            value={houchiOperation.operationOption}
-            data={OPERATION_OPTION_LIST}
-            textField="text"
-            onChange={(operationOption: OperationOption) => {
-              const ho = houchiOperation;
-              ho.operationOption = operationOption;
+        );
+        break;
+      case "free":
+        subElement = (
+          <div className="">
+            <div className="input-group">
+              <span className="input-group-addon">{"→"}</span>
+              <InputText
+                value={houchiOperation.note}
+                maxLength={50}
+                onChange={(event) => {
+                  const ho = houchiOperation;
+                  ho.note = event.currentTarget.value;
 
-              const newHoList = state.houchiOperations.filter(
-                (ho) => ho.houchiCastleCode !== houchiCastle.code
-              );
-              newHoList.push(ho);
+                  const newHoList = state.houchiOperations.filter(
+                    (ho) => ho.houchiCastleCode !== houchiCastle.code
+                  );
+                  newHoList.push(ho);
 
-              setState({
-                ...state,
-                houchiOperations: newHoList,
-              });
-            }}
-          />
-        </div>
-      ) : (
-        <React.Fragment />
-      );
+                  setState({
+                    ...state,
+                    houchiOperations: newHoList,
+                  });
+                }}
+              />
+              <span className="input-group-addon">{"。"}</span>
+            </div>
+          </div>
+        );
+        break;
+      default:
+        break;
+    }
+
     houchiCastleElements.push(
       <div className="pl-2" key={houchiCastle.code}>
         <FormGroup>
@@ -142,16 +176,26 @@ export default function KeikokuMessageGenerator(
         </FormGroup>
       </div>
     );
-    commands.push(
-      houchiOperation.turn.code === "offence" ||
-        houchiOperation.turn.code === "deffence"
-        ? `${houchiCastle.name}→残り${houchiOperation.minutes}分から${
+
+    switch (houchiOperation.turn.code) {
+      case "offence":
+      case "deffence":
+      case "counterattack":
+        commands.push(
+          `${houchiCastle.name}→残り${houchiOperation.minutes}分から${
             houchiOperation.operationOption.code !== "no-options"
               ? houchiOperation.operationOption.text
               : ""
           }${houchiOperation.turn.text}。`
-        : `${houchiCastle.name}→${houchiOperation.turn.text}。`
-    );
+        );
+        break;
+      case "free":
+        commands.push(`${houchiCastle.name}→${houchiOperation.note}。`);
+        break;
+      default:
+        commands.push(`${houchiCastle.name}→${houchiOperation.turn.text}。`);
+        break;
+    }
   });
 
   const command = `【お知らせ】${commands.join("")}${state.note}`;
@@ -214,6 +258,7 @@ export default function KeikokuMessageGenerator(
                     minutes: "",
                     seconds: "",
                     operationOption: OPERATION_OPTION_LIST[0],
+                    note: "",
                   });
                   continue;
                 }
@@ -231,6 +276,7 @@ export default function KeikokuMessageGenerator(
                   minutes: "",
                   seconds: "",
                   operationOption: OPERATION_OPTION_LIST[0],
+                  note: "",
                 });
               }
               setState({

@@ -8,4 +8,5 @@ export default interface HouchiOperation {
   minutes: number | "";
   seconds: number | "";
   operationOption: OperationOption;
+  note: string;
 }

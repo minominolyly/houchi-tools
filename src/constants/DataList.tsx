@@ -416,6 +416,11 @@ export const TURN_LIST: Turn[] = [
     text: "防衛",
   },
   {
+    code: "counterattack",
+    name: "反攻",
+    text: "反攻",
+  },
+  {
     code: "offence-without-time",
     name: "攻城（時間指示なし）",
     text: "攻城",
@@ -424,6 +429,11 @@ export const TURN_LIST: Turn[] = [
     code: "deffence-without-time",
     name: "防衛（時間指示なし）",
     text: "防衛",
+  },
+  {
+    code: "counterattack-without-time",
+    name: "反攻（時間指示なし）",
+    text: "反攻",
   },
   {
     code: "relinquish",
@@ -439,6 +449,11 @@ export const TURN_LIST: Turn[] = [
     code: "ignore",
     name: "放置",
     text: "放置",
+  },
+  {
+    code: "free",
+    name: "フリー入力",
+    text: "",
   },
 ];
 

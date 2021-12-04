@@ -360,6 +360,18 @@ export const TURN_LIST: Turn[] = [
     code: "deffence",
     name: "防衛",
   },
+  {
+    code: "relinquish",
+    name: "捨て",
+  },
+  {
+    code: "salted",
+    name: "塩漬け",
+  },
+  {
+    code: "ignore",
+    name: "放置",
+  },
 ];
 
 export const OPERATION_OPTION_LIST: OperationOption[] = [

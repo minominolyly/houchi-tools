@@ -21,7 +21,7 @@ export default function Footer(props: FooterProps): JSX.Element {
             </span>
           </Column>
         </Columns>
-        <Columns>
+        {/* <Columns>
           <Column>
             <span className="text text-copyright">
               <span className="">
@@ -30,7 +30,7 @@ export default function Footer(props: FooterProps): JSX.Element {
               {"minominolyly"}
             </span>
           </Column>
-        </Columns>
+        </Columns> */}
       </Container>
     </footer>
   );

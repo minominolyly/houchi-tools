@@ -54,6 +54,62 @@ export default function StrategistToolsPage(): JSX.Element {
         break;
     }
 
+    const subElement =
+      houchiOperation.turn.code === "offence" ||
+      houchiOperation.turn.code === "deffence" ? (
+        <div className="">
+          <div className="input-group width-10rem">
+            <span className="input-group-addon">{"残り"}</span>
+            <InputText
+              type={"number"}
+              className="width-4rem"
+              min={0}
+              max={45}
+              value={houchiOperation.minutes}
+              onChange={(event) => {
+                const ho = houchiOperation;
+                if (event.currentTarget.value !== "") {
+                  ho.minutes = Number(event.currentTarget.value);
+                } else {
+                  ho.minutes = "";
+                }
+
+                const newHoList = state.houchiOperations.filter(
+                  (ho) => ho.houchiCastleCode !== houchiCastle.code
+                );
+                newHoList.push(ho);
+
+                setState({
+                  ...state,
+                  houchiOperations: newHoList,
+                });
+              }}
+            />
+            <span className="input-group-addon">{"分から"}</span>
+          </div>
+          <DropdownList
+            value={houchiOperation.operationOption}
+            data={OPERATION_OPTION_LIST}
+            textField="text"
+            onChange={(operationOption: OperationOption) => {
+              const ho = houchiOperation;
+              ho.operationOption = operationOption;
+
+              const newHoList = state.houchiOperations.filter(
+                (ho) => ho.houchiCastleCode !== houchiCastle.code
+              );
+              newHoList.push(ho);
+
+              setState({
+                ...state,
+                houchiOperations: newHoList,
+              });
+            }}
+          />
+        </div>
+      ) : (
+        <React.Fragment />
+      );
     houchiCastleElements.push(
       <div className="pl-2" key={houchiCastle.code}>
         <FormGroup>
@@ -64,59 +120,6 @@ export default function StrategistToolsPage(): JSX.Element {
             {houchiCastle.name}
           </FormLabel>
           <div>
-            <div className="input-group width-10rem">
-              <span className="input-group-addon">{"残り"}</span>
-              <InputText
-                type={"number"}
-                className="width-4rem"
-                min={0}
-                max={45}
-                value={houchiOperation.minutes}
-                onChange={(event) => {
-                  const ho = houchiOperation;
-                  if (event.currentTarget.value !== "") {
-                    ho.minutes = Number(event.currentTarget.value);
-                  } else {
-                    ho.minutes = "";
-                  }
-
-                  const newHoList = state.houchiOperations.filter(
-                    (ho) => ho.houchiCastleCode !== houchiCastle.code
-                  );
-                  newHoList.push(ho);
-
-                  setState({
-                    ...state,
-                    houchiOperations: newHoList,
-                  });
-                }}
-              />
-              <span className="input-group-addon">{"分から"}</span>
-              {/* <span className="input-group-addon">{":"}</span>
-              <InputText
-                type={"number"}
-                className="width-4rem"
-                value={houchiOperation.seconds !== undefined ? houchiOperation.seconds : ""}
-                onChange={(event) => {
-                  const ho = houchiOperation;
-                  if (event.currentTarget.value !== "") {
-                    ho.seconds = Number(event.currentTarget.value);
-                  } else {
-                    ho.seconds = undefined;
-                  }
-
-                  const newHoList = state.houchiOperations.filter(
-                    (ho) => ho.houchiCastleCode !== houchiCastle.code
-                  );
-                  newHoList.push(ho);
-
-                  setState({
-                    ...state,
-                    houchiOperations: newHoList,
-                  });
-                }}
-              /> */}
-            </div>
             <DropdownList
               value={houchiOperation.turn}
               data={TURN_LIST}
@@ -136,35 +139,20 @@ export default function StrategistToolsPage(): JSX.Element {
                 });
               }}
             />
-            <DropdownList
-              value={houchiOperation.operationOption}
-              data={OPERATION_OPTION_LIST}
-              textField="text"
-              onChange={(operationOption: OperationOption) => {
-                const ho = houchiOperation;
-                ho.operationOption = operationOption;
-
-                const newHoList = state.houchiOperations.filter(
-                  (ho) => ho.houchiCastleCode !== houchiCastle.code
-                );
-                newHoList.push(ho);
-
-                setState({
-                  ...state,
-                  houchiOperations: newHoList,
-                });
-              }}
-            />
+            {subElement}
           </div>
         </FormGroup>
       </div>
     );
     commands.push(
-      `${houchiCastle.name}→残り${houchiOperation.minutes}分から${
-        houchiOperation.operationOption.code !== "no-options"
-          ? houchiOperation.operationOption.text
-          : ""
-      }${houchiOperation.turn.name}。`
+      houchiOperation.turn.code === "offence" ||
+        houchiOperation.turn.code === "deffence"
+        ? `${houchiCastle.name}→残り${houchiOperation.minutes}分から${
+            houchiOperation.operationOption.code !== "no-options"
+              ? houchiOperation.operationOption.text
+              : ""
+          }${houchiOperation.turn.name}。`
+        : `${houchiCastle.name}→${houchiOperation.turn.name}。`
     );
   });
 

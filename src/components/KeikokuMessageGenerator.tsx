@@ -149,8 +149,8 @@ export default function KeikokuMessageGenerator(
             houchiOperation.operationOption.code !== "no-options"
               ? houchiOperation.operationOption.text
               : ""
-          }${houchiOperation.turn.name}。`
-        : `${houchiCastle.name}→${houchiOperation.turn.name}。`
+          }${houchiOperation.turn.text}。`
+        : `${houchiCastle.name}→${houchiOperation.turn.text}。`
     );
   });
 

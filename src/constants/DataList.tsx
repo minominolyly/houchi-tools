@@ -408,22 +408,37 @@ export const TURN_LIST: Turn[] = [
   {
     code: "offence",
     name: "攻城",
+    text: "攻城",
   },
   {
     code: "deffence",
     name: "防衛",
+    text: "防衛",
+  },
+  {
+    code: "offence-without-time",
+    name: "攻城（時間指示なし）",
+    text: "攻城",
+  },
+  {
+    code: "deffence-without-time",
+    name: "防衛（時間指示なし）",
+    text: "防衛",
   },
   {
     code: "relinquish",
     name: "捨て",
+    text: "捨て",
   },
   {
     code: "salted",
     name: "塩漬け",
+    text: "塩漬け",
   },
   {
     code: "ignore",
     name: "放置",
+    text: "放置",
   },
 ];
 

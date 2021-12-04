@@ -36,8 +36,6 @@ export default function StrategistToolsPage(): JSX.Element {
             </div>
           </div>
           <div className="bg-secondary p-1">
-            <div>
-            </div>
             <KeikokuMessageGenerator />
           </div>
         </div>

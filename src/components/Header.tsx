@@ -14,9 +14,9 @@ export default function Header(props: HeaderProps): JSX.Element {
         {/* <Link className="btn btn-link" to="/onigiri-manager">
           {"おにぎりマネージャー"}
         </Link> */}
-        {/* <Link className="btn btn-link" to="https://github.com/minominolyly/houchi-tools" rel="noopener noreferrer">
+        <Link className="btn btn-link" to="https://github.com/minominolyly/houchi-tools" rel="noopener noreferrer">
           GitHub
-        </Link> */}
+        </Link>
       </section>
     </header>
   );

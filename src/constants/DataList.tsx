@@ -2,7 +2,7 @@ import HouchiMap from "../models/HouchiMap";
 import OperationOption from "../models/OperationOption";
 import Turn from "../models/Turn";
 
-export const HOUCHI_MAPS: HouchiMap[] = [
+export const HOUCHI_KEIKOKU_MAPS: HouchiMap[] = [
   {
     code: "kiyuushuu",
     name: "冀幽州",
@@ -349,6 +349,9 @@ export const HOUCHI_MAPS: HouchiMap[] = [
       { code: "ryouekishuu-royo", level: 1, name: "魯陽", yomi: "ろよう" },
     ],
   },
+];
+
+export const HOUCHI_GUNYU_MAPS: HouchiMap[] = [
   {
     code: "gunyuu",
     name: "群雄争覇",
@@ -402,6 +405,11 @@ export const HOUCHI_MAPS: HouchiMap[] = [
       { code: "gunyuu-gogun", level: 1, name: "呉都", yomi: "ごぐん" },
     ],
   },
+];
+
+export const HOUCHI_MAPS: HouchiMap[] = [
+  ...HOUCHI_KEIKOKU_MAPS,
+  ...HOUCHI_GUNYU_MAPS,
 ];
 
 export const TURN_LIST: Turn[] = [
@@ -481,6 +489,8 @@ export const OPERATION_OPTION_LIST: OperationOption[] = [
 ];
 
 const DataList = {
+  HOUCHI_KEIKOKU_MAPS,
+  HOUCHI_GUNYU_MAPS,
   HOUCHI_MAPS,
   TURN_LIST,
   OPERATION_OPTION_LIST,

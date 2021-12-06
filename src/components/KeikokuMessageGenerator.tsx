@@ -272,6 +272,7 @@ export default function KeikokuMessageGenerator(
                 }
               }}
               closeMenuOnSelect={false}
+              blurInputOnSelect={false}
               onChange={(houchiCastles) => {
                 const houchiOperations: HouchiOperation[] = [];
                 for (let i = 0; i < houchiCastles.length; i++) {

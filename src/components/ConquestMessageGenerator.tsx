@@ -19,18 +19,18 @@ import Textarea from "./Textarea";
 import Turn from "../models/Turn";
 import { faFortAwesome } from "@fortawesome/free-brands-svg-icons";
 
-const initialState: KeikokuMessageGeneratorState = {
+const initialState: ConquestMessageGeneratorState = {
   note: "",
   houchiMap: HOUCHI_MAPS[0],
   houchiCastles: [],
   houchiOperations: [],
 };
 
-export default function KeikokuMessageGenerator(
-  props: KeikokuMessageGeneratorProps
+export default function ConquestMessageGenerator(
+  props: ConquestMessageGeneratorProps
 ) {
   const [state, setState] =
-    useState<KeikokuMessageGeneratorState>(initialState);
+    useState<ConquestMessageGeneratorState>(initialState);
 
   const houchiCastleElements: JSX.Element[] = [];
   const commands: string[] = [];
@@ -341,11 +341,11 @@ export default function KeikokuMessageGenerator(
   );
 }
 
-interface KeikokuMessageGeneratorState {
+interface ConquestMessageGeneratorState {
   note: string;
   houchiMap: HouchiMap;
   houchiCastles: HouchiCastle[];
   houchiOperations: HouchiOperation[];
 }
 
-interface KeikokuMessageGeneratorProps {}
+interface ConquestMessageGeneratorProps {}

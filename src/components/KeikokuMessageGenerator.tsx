@@ -1,4 +1,3 @@
-import { DropdownList, Multiselect } from "react-widgets/cjs";
 import {
   HOUCHI_MAPS,
   OPERATION_OPTION_LIST,
@@ -15,6 +14,7 @@ import HouchiMap from "../models/HouchiMap";
 import HouchiOperation from "../models/HouchiOperation";
 import InputText from "./InputText";
 import OperationOption from "../models/OperationOption";
+import Select from "react-select";
 import Textarea from "./Textarea";
 import Turn from "../models/Turn";
 import { faFortAwesome } from "@fortawesome/free-brands-svg-icons";
@@ -88,10 +88,13 @@ export default function KeikokuMessageGenerator(
               />
               <span className="input-group-addon">{"分から"}</span>
             </div>
-            <DropdownList
+            <Select
               value={houchiOperation.operationOption}
-              data={OPERATION_OPTION_LIST}
-              textField="text"
+              options={OPERATION_OPTION_LIST}
+              isSearchable={false}
+              isMulti={false}
+              getOptionLabel={(option) => option.text}
+              getOptionValue={(option) => option.code}
               onChange={(operationOption: OperationOption) => {
                 const ho = houchiOperation;
                 ho.operationOption = operationOption;
@@ -143,7 +146,7 @@ export default function KeikokuMessageGenerator(
     }
 
     houchiCastleElements.push(
-      <div className="pl-2" key={houchiCastle.code}>
+      <div className="p-2 m-2 bg-gray" key={houchiCastle.code}>
         <FormGroup>
           <FormLabel className="text-bold">
             <span className={`text-${castleColor}`}>
@@ -152,10 +155,13 @@ export default function KeikokuMessageGenerator(
             {houchiCastle.name}
           </FormLabel>
           <div>
-            <DropdownList
+            <Select
               value={houchiOperation.turn}
-              data={TURN_LIST}
-              textField="name"
+              options={TURN_LIST}
+              isSearchable={false}
+              isMulti={false}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.code}
               onChange={(turn: Turn) => {
                 const ho = houchiOperation;
                 ho.turn = turn;
@@ -200,57 +206,95 @@ export default function KeikokuMessageGenerator(
 
   const command = `【お知らせ】${commands.join("")}${state.note}`;
 
+  const groupedHouchiCastles: {label: string, options: HouchiCastle[]}[] = [];
+  state.houchiMap.houchiCastles.forEach((houchiCastle: HouchiCastle) => {
+    const group = groupedHouchiCastles.find(g => g.label === houchiCastle.level.toString());
+    if (group) {
+      group.options.push(houchiCastle);
+    } else {
+      groupedHouchiCastles.push({
+        label: houchiCastle.level.toString(),
+        options: [houchiCastle],
+      });
+    }
+  });
+
   return (
     <section>
       <div>
         <FormGroup>
           <FormLabel className="text-bold">{"マップ"}</FormLabel>
-          <DropdownList
-            value={state.houchiMap}
-            data={HOUCHI_MAPS}
-            textField="name"
-            onChange={(houchiMap: HouchiMap) => {
-              setState({
-                ...state,
-                houchiMap: houchiMap,
-                houchiCastles: [],
-                houchiOperations: [],
-              });
-            }}
-          />
-          <FormLabel className="text-bold">{"城"}</FormLabel>
-          <Multiselect
-            value={state.houchiCastles}
-            data={state.houchiMap.houchiCastles}
-            textField={(houchiCastle: any) => {
-              switch (houchiCastle.level) {
-                case 3:
-                  return `🟨${houchiCastle.name}`;
-                case 2:
-                  return `🟦${houchiCastle.name}`;
-                case 1:
-                  return `🟥${houchiCastle.name}`;
-                default:
-                  return `${houchiCastle.name}`;
-              }
-            }}
-            groupBy={(houchiCastle) => {
-              switch (houchiCastle.level) {
-                case 3:
-                  return "金城";
-                case 2:
-                  return "青城";
-                case 1:
-                  return "赤城";
-                default:
-                  return "";
-              }
-            }}
-            onChange={(houchiCastles: HouchiCastle[]) => {
-              const houchiOperations: HouchiOperation[] = [];
-              for (let i = 0; i < houchiCastles.length; i++) {
-                const houchiCastle = houchiCastles[i];
-                if (!state.houchiOperations) {
+            <Select
+              value={state.houchiMap}
+              options={HOUCHI_MAPS}
+              isSearchable={false}
+              isMulti={false}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.code}
+              onChange={(houchiMap: HouchiMap) => {
+                setState({
+                  ...state,
+                  houchiMap: houchiMap,
+                  houchiCastles: [],
+                  houchiOperations: [],
+                });
+              }}
+            />
+            <FormLabel className="text-bold">{"城"}</FormLabel>
+            <Select
+              value={state.houchiCastles}
+              options={groupedHouchiCastles}
+              isSearchable={false}
+              isMulti={true}
+              getOptionLabel={(houchiCastle) => {
+                switch (houchiCastle.level) {
+                  case 3:
+                    return `🟨${houchiCastle.name}`;
+                  case 2:
+                    return `🟦${houchiCastle.name}`;
+                  case 1:
+                    return `🟥${houchiCastle.name}`;
+                  default:
+                    return `${houchiCastle.name}`;
+                }
+              }}
+              getOptionValue={(option) => option.code}
+              formatGroupLabel={(option) => {
+                switch (option.label) {
+                  case "3":
+                    return `🟨Lv${option.label} 金城`;
+                  case "2":
+                    return `🟦Lv${option.label} 青城`;
+                  case "1":
+                    return `🟥Lv${option.label} 赤城`;
+                  default:
+                    return `Lv${option.label}`;
+                }
+              }}
+              closeMenuOnSelect={false}
+              onChange={(houchiCastles) => {
+                const houchiOperations: HouchiOperation[] = [];
+                for (let i = 0; i < houchiCastles.length; i++) {
+                  const houchiCastle = houchiCastles[i];
+                  if (!state.houchiOperations) {
+                    houchiOperations.push({
+                      code: houchiCastle.code,
+                      houchiCastleCode: houchiCastle.code,
+                      turn: TURN_LIST[0],
+                      minutes: "",
+                      seconds: "",
+                      operationOption: OPERATION_OPTION_LIST[0],
+                      note: "",
+                    });
+                    continue;
+                  }
+                  const houchiOperation = state.houchiOperations.find(
+                    (ho) => ho.houchiCastleCode === houchiCastle.code
+                  );
+                  if (houchiOperation) {
+                    houchiOperations.push(houchiOperation);
+                    continue;
+                  }
                   houchiOperations.push({
                     code: houchiCastle.code,
                     houchiCastleCode: houchiCastle.code,
@@ -260,32 +304,14 @@ export default function KeikokuMessageGenerator(
                     operationOption: OPERATION_OPTION_LIST[0],
                     note: "",
                   });
-                  continue;
                 }
-                const houchiOperation = state.houchiOperations.find(
-                  (ho) => ho.houchiCastleCode === houchiCastle.code
-                );
-                if (houchiOperation) {
-                  houchiOperations.push(houchiOperation);
-                  continue;
-                }
-                houchiOperations.push({
-                  code: houchiCastle.code,
-                  houchiCastleCode: houchiCastle.code,
-                  turn: TURN_LIST[0],
-                  minutes: "",
-                  seconds: "",
-                  operationOption: OPERATION_OPTION_LIST[0],
-                  note: "",
+                setState({
+                  ...state,
+                  houchiCastles: Object.assign([], houchiCastles),
+                  houchiOperations: houchiOperations,
                 });
-              }
-              setState({
-                ...state,
-                houchiCastles: houchiCastles,
-                houchiOperations: houchiOperations,
-              });
-            }}
-          />
+              }}
+            />
         </FormGroup>
         {houchiCastleElements}
       </div>

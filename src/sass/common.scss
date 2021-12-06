@@ -36,7 +36,6 @@ $link-color-light: lighten($link-color, 10%) !default;
 
 @import "node_modules/spectre.css/src/spectre.scss";
 @import "node_modules/spectre.css/src/spectre-icons.scss";
-@import "node_modules/react-widgets/scss/styles.scss";
 
 :root {
   --color-white: #f0f1f5;

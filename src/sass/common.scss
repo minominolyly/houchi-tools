@@ -37,6 +37,15 @@ $link-color-light: lighten($link-color, 10%) !default;
 @import "node_modules/spectre.css/src/spectre.scss";
 @import "node_modules/spectre.css/src/spectre-icons.scss";
 
+.accordion {
+  input:checked ~,
+  &[open] {
+    & .accordion-body {
+      max-height: unset;
+    }
+  }
+}
+
 :root {
   --color-white: #f0f1f5;
   --color-black: #3b4351;

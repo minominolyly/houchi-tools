@@ -1,6 +1,6 @@
 [
   {
-    "code": "en",
+    "id": "en",
     "hrefLang": "en-US",
     "name": "English",
     "localName": "English",
@@ -8,7 +8,7 @@
     "dateFormat": "MM/DD/YYYY"
   },
   {
-    "code": "ja",
+    "id": "ja",
     "hrefLang": "ja-JP",
     "name": "Japanese",
     "localName": "日本語",

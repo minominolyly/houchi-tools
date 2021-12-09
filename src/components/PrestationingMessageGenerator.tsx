@@ -107,7 +107,7 @@ export default function PrestationingMessageGenerator(props) {
             isSearchable={false}
             isMulti={false}
             getOptionLabel={(option) => option.name}
-            getOptionValue={(option) => option.code}
+            getOptionValue={(option) => option.id}
             onChange={(houchiMap: HouchiMap) => {
               setState({
                 ...state,
@@ -134,7 +134,7 @@ export default function PrestationingMessageGenerator(props) {
                   return `${houchiCastle.name}`;
               }
             }}
-            getOptionValue={(option) => option.code}
+            getOptionValue={(option) => option.id}
             formatGroupLabel={(option) => {
               switch (option.label) {
                 case "3":
@@ -168,7 +168,7 @@ export default function PrestationingMessageGenerator(props) {
               isSearchable={false}
               isMulti={false}
               getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.code}
+              getOptionValue={(option) => option.id}
               onChange={(houchiMap: HouchiMap) => {
                 setState({
                   ...state,
@@ -195,7 +195,7 @@ export default function PrestationingMessageGenerator(props) {
                   return `${houchiCastle.name}`;
               }
             }}
-            getOptionValue={(option) => option.code}
+            getOptionValue={(option) => option.id}
             formatGroupLabel={(option) => {
               switch (option.label) {
                 case "3":

@@ -1,4 +1,4 @@
 export default interface OperationOption {
-  code: string;
+  id: string;
   text: string;
 }

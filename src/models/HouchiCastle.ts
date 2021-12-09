@@ -1,5 +1,5 @@
 export default interface HouchiCastle {
-  code: string;
+  id: string;
   level: number;
   name: string;
   yomi: string;

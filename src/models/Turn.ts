@@ -1,5 +1,5 @@
 export default interface Turn {
-  code: string;
+  id: string;
   name: string;
   text: string;
 }

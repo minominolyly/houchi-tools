@@ -2,7 +2,7 @@ import OperationOption from "./OperationOption";
 import Turn from "./Turn";
 
 export default interface HouchiOperation {
-  code: string;
+  id: string;
   houchiCastleCode: string;
   turn: Turn;
   minutes: number | "";

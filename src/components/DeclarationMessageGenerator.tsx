@@ -29,10 +29,10 @@ export default function DeclarationMessageGenerator(props) {
   const commands: string[] = [];
   commands.push(`【宣戦】${state.dateString}`);
   if (state.houchiKeikokuCastles.length > 0) {
-    commands.push(`《傾国》: ${state.houchiKeikokuCastles.map(c => c.name).join(", ")}`);
+    commands.push(`《傾国》: ${state.houchiKeikokuCastles.map(c => c.name).join("、")}`);
   }
   if (state.houchiGunyuCastles.length > 0) {
-    commands.push(`《群雄》: ${state.houchiGunyuCastles.map(c => c.name).join(", ")}`);
+    commands.push(`《群雄》: ${state.houchiGunyuCastles.map(c => c.name).join("、")}`);
   }
 
   const command = `${commands.join("")}${state.note}`;

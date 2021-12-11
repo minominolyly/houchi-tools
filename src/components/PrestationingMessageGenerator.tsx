@@ -28,7 +28,7 @@ export default function PrestationingMessageGenerator(props) {
 
   if (state.houchiKeikokuCastles.length > 0) {
     commands.push(
-      `《傾国》: ${state.houchiKeikokuCastles.map((c) => c.name).join(", ")}`
+      `《傾国》: ${state.houchiKeikokuCastles.map((c) => c.name).join("、")}`
     );
   } else {
     commands.push(`《傾国》: 駐屯なし`);
@@ -36,7 +36,7 @@ export default function PrestationingMessageGenerator(props) {
 
   if (state.houchiGunyuCastles.length > 0) {
     commands.push(
-      `《群雄》: ${state.houchiGunyuCastles.map((c) => c.name).join(", ")}`
+      `《群雄》: ${state.houchiGunyuCastles.map((c) => c.name).join("、")}`
     );
   } else {
     commands.push(`《群雄》: 駐屯なし`);
